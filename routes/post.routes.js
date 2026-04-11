@@ -4,10 +4,15 @@ const Post = require("../models/Post.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 router.post("/posts", isAuthenticated, async (req, res) => {
-	const { title, description, image, author } = req.body;
+	const { title, description, image } = req.body;
 
 	try {
-		const newPost = await Post.create({ title, description, image, author });
+		const newPost = await Post.create({
+			title,
+			description,
+			image,
+			author: req.payload._id,
+		});
 		res.status(201).json(newPost);
 	} catch (error) {
 		console.log("Error creating the next post", error);
